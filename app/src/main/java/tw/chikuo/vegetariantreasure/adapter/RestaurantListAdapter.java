@@ -1,18 +1,33 @@
 package tw.chikuo.vegetariantreasure.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
 
 /**
  * Created by Chi on 2016/3/26.
  */
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.ViewHolder> {
+
+    private Context context;
+    private List<Restaurant> restaurantList;
+
+    public RestaurantListAdapter(Context context) {
+        this.context = context;
+        restaurantList = new ArrayList<>();
+    }
+
     @Override
     public RestaurantListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
@@ -25,28 +40,37 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     @Override
     public void onBindViewHolder(RestaurantListAdapter.ViewHolder holder, int position) {
 
+        Restaurant restaurant = restaurantList.get(position);
+
+        if (restaurant.getName() != null) {
+            holder.nameTextView.setText(restaurant.getName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return restaurantList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-//        protected TextView ;
-//        protected Button ;
+        protected TextView nameTextView;
+        protected ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-//            sectionTitleTextView = (TextView) itemView.findViewById(R.id.section_title_text_view);
-//            mapButton = (Button) itemView.findViewById(R.id.map_button);
+            nameTextView = (TextView) itemView.findViewById(R.id.restaurant_name);
+            imageView = (ImageView) itemView.findViewById(R.id.restaurant_image);
         }
 
         @Override
         public void onClick(View v) {
 
         }
+    }
+
+    public void setRestaurantList(List<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
     }
 }

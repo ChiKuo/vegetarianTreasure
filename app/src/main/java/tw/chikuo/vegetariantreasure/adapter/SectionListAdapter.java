@@ -9,6 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
 
 /**
@@ -32,10 +40,10 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(SectionListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final SectionListAdapter.ViewHolder holder, int position) {
 
         // RecyclerView
-        RestaurantListAdapter restaurantListAdapter = new RestaurantListAdapter();
+        final RestaurantListAdapter restaurantListAdapter = new RestaurantListAdapter(context);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         holder.recyclerView.setLayoutManager(layoutManager);
@@ -44,15 +52,31 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         switch (position){
             case 0:
                 holder.sectionTitleTextView.setText("在你附近");
+                findNearRestaurant(restaurantListAdapter);
                 break;
             case 1:
                 holder.sectionTitleTextView.setText("好多人去喔");
+                findNearRestaurant(restaurantListAdapter);
                 break;
             case 2:
                 holder.sectionTitleTextView.setText("來嚐鮮吧");
+                findNearRestaurant(restaurantListAdapter);
                 break;
         }
 
+    }
+
+    private void findNearRestaurant(final RestaurantListAdapter restaurantListAdapter) {
+        ParseQuery<Restaurant> restaurantParseQuery = ParseQuery.getQuery(Restaurant.class);
+        restaurantParseQuery.findInBackground(new FindCallback<Restaurant>() {
+            @Override
+            public void done(List<Restaurant> objects, ParseException e) {
+                if (e == null){
+                    restaurantListAdapter.setRestaurantList(objects);
+                    restaurantListAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
