@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#4CAF50</color>-->
+    <!--<color name="colorPrimaryDark">#388E3C</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorPrimary">#795548</color>
+    <color name="colorPrimaryDark">#5D4037</color>
+    <color name="colorAccent">#F35A4A</color>
+
+
+    <color name="treasure_1">#7BA3A8</color>
+    <color name="treasure_2">#F4F3DE</color>
+    <color name="treasure_3">#BEAD92</color>
+    <color name="treasure_4">#F35A4A</color>
+    <color name="treasure_5">#5B4947</color>
+
+</resources>
