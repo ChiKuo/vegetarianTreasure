@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.parse.ParseObject;
+
 import tw.chikuo.vegetariantreasure.R;
 import tw.chikuo.vegetariantreasure.adapter.SectionListAdapter;
 
@@ -46,7 +48,6 @@ public class MainActivity extends AppCompatActivity
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(sectionListAdapter);
-
 
     }
 

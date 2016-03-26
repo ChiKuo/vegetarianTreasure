@@ -40,11 +40,24 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
                 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         holder.recyclerView.setLayoutManager(layoutManager);
         holder.recyclerView.setAdapter(restaurantListAdapter);
+
+        switch (position){
+            case 0:
+                holder.sectionTitleTextView.setText("在你附近");
+                break;
+            case 1:
+                holder.sectionTitleTextView.setText("好多人去喔");
+                break;
+            case 2:
+                holder.sectionTitleTextView.setText("來嚐鮮吧");
+                break;
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 3;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
