@@ -1,6 +1,7 @@
 package tw.chikuo.vegetariantreasure.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
+import tw.chikuo.vegetariantreasure.activity.MapsActivity;
 
 /**
  * Created by Chi on 2016/3/26.
@@ -48,6 +50,15 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
                 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         holder.recyclerView.setLayoutManager(layoutManager);
         holder.recyclerView.setAdapter(restaurantListAdapter);
+
+        // Map
+        holder.mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(context, MapsActivity.class);
+                context.startActivity(mapIntent);
+            }
+        });
 
         switch (position){
             case 0:
