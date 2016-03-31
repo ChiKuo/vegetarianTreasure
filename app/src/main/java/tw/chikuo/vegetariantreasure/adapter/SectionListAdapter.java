@@ -1,5 +1,6 @@
 package tw.chikuo.vegetariantreasure.adapter;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
+import tw.chikuo.vegetariantreasure.PermissionManager;
 import tw.chikuo.vegetariantreasure.R;
+import tw.chikuo.vegetariantreasure.activity.MainActivity;
 import tw.chikuo.vegetariantreasure.activity.MapsActivity;
 
 /**
@@ -55,8 +58,22 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         holder.mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mapIntent = new Intent(context, MapsActivity.class);
-                context.startActivity(mapIntent);
+
+                // Show permission for android 6.0
+                PermissionManager permissionManager = new PermissionManager((MainActivity)context);
+                // Let onRequestPermissionsResult can call back from MainActivity
+                ((MainActivity)context).setPermissionManager(permissionManager);
+                permissionManager.loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        PermissionManager.REQUEST_ACCESS_FINE_LOCATION, new PermissionManager.OnGrantedResultListener() {
+                            @Override
+                            public void granted() {
+
+                                Intent mapIntent = new Intent(context, MapsActivity.class);
+                                context.startActivity(mapIntent);
+
+                            }
+                        });
+
             }
         });
 

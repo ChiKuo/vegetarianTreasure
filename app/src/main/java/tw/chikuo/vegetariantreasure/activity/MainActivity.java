@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.parse.ParseObject;
 
+import tw.chikuo.vegetariantreasure.PermissionManager;
 import tw.chikuo.vegetariantreasure.R;
 import tw.chikuo.vegetariantreasure.adapter.SectionListAdapter;
 
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
     private SectionListAdapter sectionListAdapter;
+
+    // Permission
+    private PermissionManager permissionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,5 +110,21 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissionManager != null) {
+            permissionManager.onResultHandle(requestCode, permissions, grantResults);
+        }
+    }
+
+    public PermissionManager getPermissionManager() {
+        return permissionManager;
+    }
+
+    public void setPermissionManager(PermissionManager permissionManager) {
+        this.permissionManager = permissionManager;
     }
 }
