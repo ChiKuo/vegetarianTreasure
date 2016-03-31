@@ -59,20 +59,8 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
             @Override
             public void onClick(View v) {
 
-                // Show permission for android 6.0
-                PermissionManager permissionManager = new PermissionManager((MainActivity)context);
-                // Let onRequestPermissionsResult can call back from MainActivity
-                ((MainActivity)context).setPermissionManager(permissionManager);
-                permissionManager.loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        PermissionManager.REQUEST_ACCESS_FINE_LOCATION, new PermissionManager.OnGrantedResultListener() {
-                            @Override
-                            public void granted() {
-
-                                Intent mapIntent = new Intent(context, MapsActivity.class);
-                                context.startActivity(mapIntent);
-
-                            }
-                        });
+                Intent mapIntent = new Intent(context, MapsActivity.class);
+                context.startActivity(mapIntent);
 
             }
         });

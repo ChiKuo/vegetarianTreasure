@@ -51,6 +51,7 @@ public class PermissionManager {
             }
         } else {
             // no granted
+            // TODO show error message
         }
     }
 

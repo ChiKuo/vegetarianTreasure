@@ -1,6 +1,8 @@
 package tw.chikuo.vegetariantreasure.activity;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -8,11 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -27,6 +32,7 @@ import tw.chikuo.vegetariantreasure.R;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private PermissionManager permissionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +46,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             actionBar.setDisplayUseLogoEnabled(false);
         }
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        // Show permission for android 6.0
+        permissionManager = new PermissionManager(MapsActivity.this);
+        permissionManager.loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                PermissionManager.REQUEST_ACCESS_FINE_LOCATION, new PermissionManager.OnGrantedResultListener() {
+                    @Override
+                    public void granted() {
+                        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.map);
+                        mapFragment.getMapAsync(MapsActivity.this);
+                    }
+                });
+
     }
 
 
@@ -60,36 +75,55 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if (mMap != null){
+        if (mMap != null) {
 
-            // TODO Focus and room to user location
+            // Check Permission
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
 
-
-            // TODO Add restaurant Mark
+            // Show my location and room in
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+            mMap.setMyLocationEnabled(true);
+            mMap.animateCamera(zoom);
 
             // TODO Change data from Intent
+            // Add restaurant Mark
             ParseQuery<Restaurant> restaurantParseQuery = ParseQuery.getQuery(Restaurant.class);
             restaurantParseQuery.findInBackground(new FindCallback<Restaurant>() {
                 @Override
                 public void done(List<Restaurant> objects, ParseException e) {
-                    if (e == null){
-                       for (Restaurant restaurant : objects){
-                           LatLng latLng = new LatLng(restaurant.getGeoPoint().getLatitude(),
-                                                        restaurant.getGeoPoint().getLongitude());
-                           mMap.addMarker(new MarkerOptions().position(latLng).title("Marker Ya!"));
-                           mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                       }
+                    if (e == null) {
+
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                        // Setup each marker
+                        for (Restaurant restaurant : objects) {
+                            LatLng latLng = new LatLng(restaurant.getGeoPoint().getLatitude(),
+                                    restaurant.getGeoPoint().getLongitude());
+                            MarkerOptions options = new MarkerOptions().position(latLng).title(restaurant.getName());
+                            mMap.addMarker(options);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            builder.include(options.getPosition());
+                        }
+
+                        // Calculate the bounds of all markers
+                        LatLngBounds bounds = builder.build();
+
+                        // Room to see all markers
+                        int padding = 100;
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                        mMap.moveCamera(cameraUpdate);
+                        mMap.animateCamera(cameraUpdate);
                     }
                 }
             });
 
-//            // Add a marker in Sydney and move the camera
-//            LatLng sydney = new LatLng(-34, 151);
-//            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -100,6 +134,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        permissionManager.onResultHandle(requestCode, permissions, grantResults);
     }
 
 }
