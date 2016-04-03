@@ -1,6 +1,7 @@
 package tw.chikuo.vegetariantreasure.Object.parse;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
@@ -31,13 +32,19 @@ public class Restaurant extends ParseObject {
     public void setPhone(String phone) {
         put("phone", phone);
     }
-
     // geoPoint
     public ParseGeoPoint getGeoPoint() {
         return getParseGeoPoint("geoPoint");
     }
-
     public void setGeoPoint(ParseGeoPoint geoPoint) {
         put("geoPoint", geoPoint);
+    }
+
+    // photo
+    public ParseFile getPhoto() {
+        return getParseFile("photo");
+    }
+    public void setPhoto(ParseFile photo) {
+        put("photo", photo);
     }
 }

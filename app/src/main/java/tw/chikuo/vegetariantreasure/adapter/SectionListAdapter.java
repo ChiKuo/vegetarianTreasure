@@ -1,6 +1,5 @@
 package tw.chikuo.vegetariantreasure.adapter;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +14,10 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
-import tw.chikuo.vegetariantreasure.PermissionManager;
 import tw.chikuo.vegetariantreasure.R;
-import tw.chikuo.vegetariantreasure.activity.MainActivity;
 import tw.chikuo.vegetariantreasure.activity.MapsActivity;
 
 /**

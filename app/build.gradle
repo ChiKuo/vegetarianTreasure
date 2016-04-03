@@ -6,10 +6,12 @@ android {
 
     defaultConfig {
         applicationId "tw.chikuo.vegetariantreasure"
+        multiDexEnabled true
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
     }
     buildTypes {
         release {
@@ -32,4 +34,6 @@ dependencies {
     compile 'com.parse:parse-android:1.+'
     // Google Map
     compile 'com.google.android.gms:play-services:8.4.0'
+    // Image load
+    compile 'com.koushikdutta.ion:ion:2.+'
 }

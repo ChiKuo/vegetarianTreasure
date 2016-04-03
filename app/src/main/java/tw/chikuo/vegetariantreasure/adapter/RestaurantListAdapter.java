@@ -5,9 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,10 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     @Override
     public RestaurantListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // TODO Setup 2 ViewHolder for horizontal & vertical
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.recycler_restaurant_list, parent, false);
+                inflate(R.layout.recycler_restaurant_list_vertical, parent, false);
 
         return new ViewHolder(itemView);
     }
@@ -44,6 +46,11 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
         if (restaurant.getName() != null) {
             holder.nameTextView.setText(restaurant.getName());
+        }
+        if (restaurant.getPhoto() != null) {
+            Ion.with(holder.imageView)
+                    .centerCrop()
+                    .load(restaurant.getPhoto().getUrl());
         }
     }
 

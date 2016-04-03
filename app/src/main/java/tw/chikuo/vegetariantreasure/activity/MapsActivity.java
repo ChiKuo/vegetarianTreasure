@@ -98,20 +98,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+                        // TODO Show all markers info on map , Use Google Maps Android API utility library
+
                         // Setup each marker
                         for (Restaurant restaurant : objects) {
-                            LatLng latLng = new LatLng(restaurant.getGeoPoint().getLatitude(),
-                                    restaurant.getGeoPoint().getLongitude());
-                            MarkerOptions options = new MarkerOptions().position(latLng).title(restaurant.getName());
-                            mMap.addMarker(options);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            builder.include(options.getPosition());
+                            if (restaurant.getGeoPoint() != null) {
+                                LatLng latLng = new LatLng(restaurant.getGeoPoint().getLatitude(),
+                                        restaurant.getGeoPoint().getLongitude());
+                                MarkerOptions options = new MarkerOptions().position(latLng).title(restaurant.getName());
+                                mMap.addMarker(options);
+                                builder.include(options.getPosition());
+                            }
                         }
 
                         // Calculate the bounds of all markers
                         LatLngBounds bounds = builder.build();
 
-                        // Room to see all markers
+                        // Zoom to see all markers
                         int padding = 100;
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                         mMap.moveCamera(cameraUpdate);
