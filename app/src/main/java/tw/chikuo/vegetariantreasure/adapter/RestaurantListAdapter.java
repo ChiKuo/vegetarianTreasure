@@ -24,6 +24,10 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     private Context context;
     private List<Restaurant> restaurantList;
 
+    public static final int TYPE_HORIZONTAL = 0;
+    public static final int TYPE_VERTICAL = 1;
+    private int orientation ;
+
     public RestaurantListAdapter(Context context) {
         this.context = context;
         restaurantList = new ArrayList<>();
@@ -31,16 +35,30 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     @Override
     public RestaurantListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // TODO Setup 2 ViewHolder for horizontal & vertical
-        View itemView = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.recycler_restaurant_list_vertical, parent, false);
 
-        return new ViewHolder(itemView);
+        if (viewType == TYPE_HORIZONTAL) {
+
+            View itemView = LayoutInflater.
+                    from(parent.getContext()).
+                    inflate(R.layout.recycler_restaurant_list_horizontal, parent, false);
+
+            return new ViewHolder(itemView);
+        } else if (viewType == TYPE_VERTICAL) {
+
+            View itemView = LayoutInflater.
+                    from(parent.getContext()).
+                    inflate(R.layout.recycler_restaurant_list_vertical, parent, false);
+
+            return new ViewHolder(itemView);
+        }
+        throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
+
     }
 
     @Override
     public void onBindViewHolder(RestaurantListAdapter.ViewHolder holder, int position) {
+
+        // TYPE_HORIZONTAL & TYPE_VERTICAL are the same code
 
         Restaurant restaurant = restaurantList.get(position);
 
@@ -57,6 +75,15 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     @Override
     public int getItemCount() {
         return restaurantList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (orientation == TYPE_HORIZONTAL){
+            return TYPE_HORIZONTAL;
+        } else {
+            return TYPE_VERTICAL;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -79,5 +106,9 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     public void setRestaurantList(List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
     }
 }

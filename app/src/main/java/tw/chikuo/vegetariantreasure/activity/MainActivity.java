@@ -1,5 +1,6 @@
 package tw.chikuo.vegetariantreasure.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +37,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("附近美食");
         setSupportActionBar(toolbar);
+
+        // TODO study to use FadingActionBar
 
         // DrawerLayout
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        // RecyclerView (For SectionListAdapter)
+        // RecyclerView (For SectionListAdapter)
 //        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 //        sectionListAdapter = new SectionListAdapter(MainActivity.this);
 //        LinearLayoutManager layoutManager
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         // RecyclerView (For SectionListAdapter)
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         restaurantListAdapter = new RestaurantListAdapter(MainActivity.this);
+        restaurantListAdapter.setOrientation(RestaurantListAdapter.TYPE_VERTICAL);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(restaurantListAdapter);
         findRestaurant();
@@ -92,6 +97,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_map) {
+            Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
+            this.startActivity(mapIntent);
             return true;
         }
 

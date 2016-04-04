@@ -45,6 +45,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
         // RecyclerView
         final RestaurantListAdapter restaurantListAdapter = new RestaurantListAdapter(context);
+        restaurantListAdapter.setOrientation(RestaurantListAdapter.TYPE_HORIZONTAL);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         holder.recyclerView.setLayoutManager(layoutManager);
