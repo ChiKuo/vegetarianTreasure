@@ -52,6 +52,11 @@
             android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"></activity>
+
+        <activity
+            android:name=".activity.RestaurantActivity"
+            android:label="@string/title_activity_restaurant"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"></activity>
     </application>
 
     <uses-feature

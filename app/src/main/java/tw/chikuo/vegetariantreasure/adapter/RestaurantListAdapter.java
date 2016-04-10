@@ -1,11 +1,13 @@
 package tw.chikuo.vegetariantreasure.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
@@ -15,6 +17,7 @@ import java.util.List;
 
 import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
+import tw.chikuo.vegetariantreasure.activity.RestaurantActivity;
 
 /**
  * Created by Chi on 2016/3/26.
@@ -90,17 +93,24 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
         protected TextView nameTextView;
         protected ImageView imageView;
+        protected LinearLayout cardLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            cardLayout = (LinearLayout)itemView.findViewById(R.id.card_layout);
             nameTextView = (TextView) itemView.findViewById(R.id.restaurant_name);
             imageView = (ImageView) itemView.findViewById(R.id.restaurant_image);
+            cardLayout.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
 
+            Restaurant restaurant = restaurantList.get(getAdapterPosition());
+
+            Intent restaurantIntent = new Intent(context, RestaurantActivity.class);
+            restaurantIntent.putExtra("restaurantId", restaurant.getObjectId());
+            context.startActivity(restaurantIntent);
         }
     }
 
