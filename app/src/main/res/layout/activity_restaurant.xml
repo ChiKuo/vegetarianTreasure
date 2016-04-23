@@ -1,83 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/restaurant_photo_image"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:background="@color/treasure_3"
-        android:scaleType="centerCrop"
-        android:id="@+id/restaurant_photo_image" />
+        android:scaleType="centerCrop" />
 
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:layout_marginLeft="20dp"-->
-        <!--android:layout_marginRight="25dp">-->
 
-        <!--<ImageView-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:padding="4dp"-->
-            <!--android:layout_marginRight="20dp"-->
-            <!--android:src="@drawable/ic_setting_light" />-->
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/restaurant_address_text_view"-->
-            <!--android:layout_gravity="center_vertical" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:layout_marginLeft="20dp"-->
-        <!--android:layout_marginRight="25dp">-->
-
-        <!--<ImageView-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:padding="4dp"-->
-            <!--android:layout_marginRight="20dp"-->
-            <!--android:id="@+id/imageView2"-->
-            <!--android:src="@drawable/ic_setting_light" />-->
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/restaurant_phone_text_view"-->
-            <!--android:layout_gravity="center_vertical" />-->
-    <!--</LinearLayout>-->
-
-    <Button
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/restaurant_address_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="70dp"
+            android:paddingRight="20dp"/>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_location" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/restaurant_phone_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="70dp"
+            android:paddingRight="20dp"/>
+
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_phone" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/restaurant_address_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:drawableLeft="@drawable/ic_setting_light"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:drawablePadding="30dp"
-        android:gravity="start|center_vertical" />
+        android:layout_marginBottom="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="相關食記"
+        android:id="@+id/textView2" />
 
 
     <Button
+        android:id="@+id/test1"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/restaurant_phone_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:drawableLeft="@drawable/ic_setting_light"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:drawablePadding="30dp"
-        android:gravity="start|center_vertical" />
+        android:gravity="start|center_vertical"
+        android:lines="1"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="食記1食記1食記1食記1食記1食記1食記1食記1"/>
 
+
+    <Button
+        android:id="@+id/test2"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="食記2食記2食記2食記2食記2食記2" />
+
+
+
+    <Button
+        android:id="@+id/test3"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="食記3食記3食記3食記3食記3食記3食記3" />
 </LinearLayout>
