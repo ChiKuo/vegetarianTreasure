@@ -14,9 +14,13 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
+import tw.chikuo.vegetariantreasure.RestaurantToMapItemTask;
+import tw.chikuo.vegetariantreasure.object.MapItem;
+import tw.chikuo.vegetariantreasure.object.MapObject;
+import tw.chikuo.vegetariantreasure.object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
 import tw.chikuo.vegetariantreasure.activity.MapsActivity;
 
@@ -56,8 +60,24 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
             @Override
             public void onClick(View v) {
 
-                Intent mapIntent = new Intent(context, MapsActivity.class);
-                context.startActivity(mapIntent);
+                ParseQuery<Restaurant> restaurantParseQuery = ParseQuery.getQuery(Restaurant.class);
+                restaurantParseQuery.findInBackground(new FindCallback<Restaurant>() {
+                    @Override
+                    public void done(List<Restaurant> objects, ParseException e) {
+                        if (e == null) {
+
+                            List<MapItem> mapItemList = RestaurantToMapItemTask.translation(objects);
+                            MapObject mapObject = new MapObject();
+                            mapObject.setMapItemList(mapItemList);
+                            mapObject.setTitle("Map");
+
+                            Intent mapIntent = new Intent(context, MapsActivity.class);
+                            mapIntent.putExtra("mapObject",mapObject);
+                            context.startActivity(mapIntent);
+
+                        }
+                    }
+                });
 
             }
         });

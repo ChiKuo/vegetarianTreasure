@@ -16,6 +16,7 @@ public class PermissionManager {
     public static final int REQUEST_CAMERA = 1;
     public static final int REQUEST_ACCESS_COARSE_LOCATION = 2;
     public static final int REQUEST_ACCESS_FINE_LOCATION = 3;
+    public static final int REQUEST_CALL_PHONE = 4;
 
 
     private static Activity requestActivity;

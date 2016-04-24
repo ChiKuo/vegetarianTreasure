@@ -1,15 +1,17 @@
-package tw.chikuo.vegetariantreasure.Object.parse;
+package tw.chikuo.vegetariantreasure.object.parse;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Chi on 2016/3/26.
  */
 @ParseClassName("Restaurant")
-public class Restaurant extends ParseObject {
+public class Restaurant extends ParseObject{
 
     // name
     public String getName() {

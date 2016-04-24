@@ -15,7 +15,7 @@ import com.koushikdutta.ion.Ion;
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
+import tw.chikuo.vegetariantreasure.object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
 import tw.chikuo.vegetariantreasure.activity.RestaurantActivity;
 

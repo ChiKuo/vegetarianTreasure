@@ -2,7 +2,6 @@ package tw.chikuo.vegetariantreasure.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,9 +17,13 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
+import tw.chikuo.vegetariantreasure.RestaurantToMapItemTask;
+import tw.chikuo.vegetariantreasure.object.MapItem;
+import tw.chikuo.vegetariantreasure.object.MapObject;
+import tw.chikuo.vegetariantreasure.object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.R;
 import tw.chikuo.vegetariantreasure.adapter.RestaurantListAdapter;
 import tw.chikuo.vegetariantreasure.adapter.SectionListAdapter;
@@ -99,8 +102,27 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_map) {
-            Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
-            this.startActivity(mapIntent);
+
+            // TODO change
+            ParseQuery<Restaurant> restaurantParseQuery = ParseQuery.getQuery(Restaurant.class);
+            restaurantParseQuery.findInBackground(new FindCallback<Restaurant>() {
+                @Override
+                public void done(List<Restaurant> objects, ParseException e) {
+                    if (e == null) {
+
+                        List<MapItem> mapItemList = RestaurantToMapItemTask.translation(objects);
+                        MapObject mapObject = new MapObject();
+                        mapObject.setMapItemList(mapItemList);
+                        mapObject.setTitle("Map");
+
+                        Intent mapIntent = new Intent(MainActivity.this, MapsActivity.class);
+                        mapIntent.putExtra("mapObject", mapObject);
+                        startActivity(mapIntent);
+
+                    }
+                }
+            });
+
             return true;
         }
 

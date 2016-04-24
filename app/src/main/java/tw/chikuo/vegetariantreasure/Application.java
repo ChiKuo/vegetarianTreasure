@@ -3,7 +3,8 @@ package tw.chikuo.vegetariantreasure;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
+import tw.chikuo.vegetariantreasure.object.parse.Diary;
+import tw.chikuo.vegetariantreasure.object.parse.Restaurant;
 
 /**
  * Created by Chi on 2016/3/26.
@@ -20,6 +21,7 @@ public class Application extends android.app.Application {
         // Parse
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Restaurant.class);
+        ParseObject.registerSubclass(Diary.class);
         Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
     }
 }

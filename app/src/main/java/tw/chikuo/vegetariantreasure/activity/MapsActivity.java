@@ -3,11 +3,9 @@ package tw.chikuo.vegetariantreasure.activity;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -17,33 +15,48 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 
 import java.util.List;
 
-import tw.chikuo.vegetariantreasure.Object.parse.Restaurant;
+import tw.chikuo.vegetariantreasure.object.MapItem;
+import tw.chikuo.vegetariantreasure.object.MapObject;
+import tw.chikuo.vegetariantreasure.object.parse.Restaurant;
 import tw.chikuo.vegetariantreasure.PermissionManager;
 import tw.chikuo.vegetariantreasure.R;
 
+/**
+ *  Input data : MapItem (title & restaurantList)
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private PermissionManager permissionManager;
+    private String title;
+    private List<MapItem> mapObjectList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        // Get extra data
+        if (getIntent().hasExtra("mapObject")){
+            MapObject mapObject = (MapObject) getIntent().getSerializableExtra("mapObject");
+            if (mapObject != null && mapObject.getTitle() != null && mapObject.getMapItemList() != null){
+                title = mapObject.getTitle();
+                mapObjectList = mapObject.getMapItemList();
+            }
+        }
+
         // Actionbar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayUseLogoEnabled(false);
+        }
+        if (title != null){
+            actionBar.setTitle(title);
         }
 
         // Show permission for android 6.0
@@ -88,40 +101,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
             mMap.animateCamera(zoom);
 
-            // TODO Change data from Intent
-            // Add restaurant Mark
-            ParseQuery<Restaurant> restaurantParseQuery = ParseQuery.getQuery(Restaurant.class);
-            restaurantParseQuery.findInBackground(new FindCallback<Restaurant>() {
-                @Override
-                public void done(List<Restaurant> objects, ParseException e) {
-                    if (e == null) {
 
-                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            if (mapObjectList != null && mapObjectList.size() > 0){
 
-                        // TODO Show all markers info on map , Use Google Maps Android API utility library
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                        // Setup each marker
-                        for (Restaurant restaurant : objects) {
-                            if (restaurant.getGeoPoint() != null) {
-                                LatLng latLng = new LatLng(restaurant.getGeoPoint().getLatitude(),
-                                        restaurant.getGeoPoint().getLongitude());
-                                MarkerOptions options = new MarkerOptions().position(latLng).title(restaurant.getName());
-                                mMap.addMarker(options);
-                                builder.include(options.getPosition());
-                            }
-                        }
+                // TODO Show all markers info on map , Use Google Maps Android API utility library
 
-                        // Calculate the bounds of all markers
-                        LatLngBounds bounds = builder.build();
-
-                        // Zoom to see all markers
-                        int padding = 100;
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                        mMap.moveCamera(cameraUpdate);
-                        mMap.animateCamera(cameraUpdate);
+                // Setup each marker
+                for (MapItem mapItem : mapObjectList) {
+                    if (mapItem.getName() != null){
+                        LatLng latLng = new LatLng(mapItem.getLatitude(),mapItem.getLongitude());
+                        MarkerOptions options = new MarkerOptions().position(latLng).title(mapItem.getName());
+                        mMap.addMarker(options);
+                        builder.include(options.getPosition());
                     }
                 }
-            });
+
+
+                if (mapObjectList.size() == 1){
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(mapObjectList.get(0).getLatitude(), mapObjectList.get(0).getLongitude()), 15.0f));
+                } else {
+
+                    // Calculate the bounds of all markers
+                    final LatLngBounds bounds = builder.build();
+
+                    // Zoom to see all markers
+                    // Add bounds to map to avoid swiping outside a certain region:
+                    // http://stackoverflow.com/questions/25231949/add-bounds-to-map-to-avoid-swiping-outside-a-certain-region
+                    mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            int padding = 100;
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                            mMap.moveCamera(cameraUpdate);
+                            mMap.animateCamera(cameraUpdate);
+                        }
+                    });
+                }
+
+
+            }
 
         }
 
