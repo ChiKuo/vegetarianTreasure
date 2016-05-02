@@ -1,11 +1,15 @@
 package tw.chikuo.vegetariantreasure.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.style.StyleSpan;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -13,10 +17,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.BubbleIconFactory;
+import com.google.maps.android.ui.IconGenerator;
 
+import java.util.HashMap;
 import java.util.List;
 
 import tw.chikuo.vegetariantreasure.object.MapItem;
@@ -27,13 +36,22 @@ import tw.chikuo.vegetariantreasure.R;
 
 /**
  *  Input data : MapItem (title & restaurantList)
+ *
+ *  https://developers.google.com/maps/documentation/android-api/utility/#introduction
+ *  https://github.com/googlemaps/android-maps-utils/blob/master/demo/src/com/google/maps/android/utils/demo/IconGeneratorDemoActivity.java
+ *
  */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private PermissionManager permissionManager;
+
+    // Extra Input
     private String title;
     private List<MapItem> mapObjectList;
+
+    private HashMap<Marker,MapItem> markerRestaurantHashMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,21 +122,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (mapObjectList != null && mapObjectList.size() > 0){
 
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                // Put Result on map
+                markerRestaurantHashMap = new HashMap<>();
 
-                // TODO Show all markers info on map , Use Google Maps Android API utility library
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
                 // Setup each marker
                 for (MapItem mapItem : mapObjectList) {
                     if (mapItem.getName() != null){
                         LatLng latLng = new LatLng(mapItem.getLatitude(),mapItem.getLongitude());
-                        MarkerOptions options = new MarkerOptions().position(latLng).title(mapItem.getName());
-                        mMap.addMarker(options);
-                        builder.include(options.getPosition());
+
+                        // Show all markers info on map , Use Google Maps Android API utility library
+                        IconGenerator iconFactory = new IconGenerator(this);
+                        iconFactory.setTextAppearance(R.style.mapIconText);
+                        addIcon(iconFactory, mapItem, latLng);
+
+                        builder.include(latLng);
                     }
                 }
 
-
+                // Setup camera
                 if (mapObjectList.size() == 1){
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(mapObjectList.get(0).getLatitude(), mapObjectList.get(0).getLongitude()), 15.0f));
@@ -133,7 +156,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                         @Override
                         public void onMapLoaded() {
-                            int padding = 100;
+                            int padding = 200;
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                             mMap.moveCamera(cameraUpdate);
                             mMap.animateCamera(cameraUpdate);
@@ -141,6 +164,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     });
                 }
 
+                // Marker click
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+
+                        MapItem mapItem = markerRestaurantHashMap.get(marker);
+
+                        Intent restaurantIntent = new Intent(MapsActivity.this, RestaurantActivity.class);
+                        restaurantIntent.putExtra("restaurantId", mapItem.getRestaurantId());
+                        startActivity(restaurantIntent);
+
+                        return false;
+                    }
+                });
 
             }
 
@@ -148,6 +185,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
+    private void addIcon(IconGenerator iconFactory, MapItem mapItem, LatLng position) {
+        CharSequence text = mapItem.getName();
+        MarkerOptions markerOptions = new MarkerOptions().
+                icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
+                position(position).
+                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
+
+        // Setup marker with seller calendar data.
+        Marker marker = mMap.addMarker(markerOptions);
+        markerRestaurantHashMap.put(marker, mapItem);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
